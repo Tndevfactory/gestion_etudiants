@@ -20,10 +20,18 @@
         @endif
     </head>
     <body>
-        @include('home.components.navbar')
-
-        @yield('content')
-
-        @include('home.components.footer')
+        <div class="flex min-h-screen">
+            <div id='left'class="basis-[15rem] bg-gray-300 p-4" >
+                @include('admin.components.adminSidebar')
+            </div>
+            <div id='right' class="flex flex-1 flex-col">
+                <div class="bg-gray-200  ">
+                    @include('admin.components.adminNavbar')
+                </div>
+                <div class='flex-1 p-6'>
+                    @yield('content')
+                </div>
+            </div>
+       </div>
     </body>
 </html>
