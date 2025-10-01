@@ -16,7 +16,21 @@
       </div>
       <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
       </div>
-      <div>Déconnexion</div>
+
+        <div>
+            @if(Auth::check())
+            <div class="text-white mr-4">Bonjour, {{ Auth::user()->name }}</div>
+            @endif
+        </div>
+
+      <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+            Déconnexion
+        </button>
+      </form>
+
+
       <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
         <button type="button" class="relative rounded-full p-1 text-gray-400 hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500">
           <span class="absolute -inset-1.5"></span>

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -20,21 +23,44 @@ class AuthController extends Controller
     // logique
     public function register(Request $request)
     {
-        // si tout va bien redirection vers dashboard
-        // confirmation d'inscription
-        return view('auth.register');
+        // validation
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        // save to database
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ]);
+
+        Auth::login($user);
+
+        return redirect()->route('dashboard');
     }
 
     public function login(Request $request)
-    {     // Request data envoyer par le formulaire
-          // si tout va bien redirection vers dashboard
-        return view('auth.register');
+    {
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+        if(Auth::attempt($request->only('email', 'password'))){
+            return redirect()->route('dashboard');
+        }
+          return back()->withErrors(
+            ['email' => 'Email  incorrect',
+            'password' => 'mot de passe incorrect']
+        );
     }
 
     public function logout()
     {
-        // a la fin du logout redirection vers login page
-        return view('auth.register');
+        Auth::logout();
+        return redirect()->route('login');
     }
 
 }
