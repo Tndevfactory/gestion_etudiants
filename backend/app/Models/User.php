@@ -7,10 +7,32 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+
 class User extends Authenticatable
 {
+    protected $table = 'users';
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+
+        // Relation vers le rôle
+        public function role()
+        {
+            return $this->belongsTo(Role::class, 'role_id');
+        }
+
+        // Relation 1-1 vers Student
+        public function student()   // Accède au profil étudiant
+        {
+            return $this->hasOne(Student::class, 'id');
+        }
+
+        // Relation 1-1 vers Teacher
+        public function teacher()
+        {
+            return $this->hasOne(Teacher::class, 'id');
+        }
+
 
     /**
      * The attributes that are mass assignable.

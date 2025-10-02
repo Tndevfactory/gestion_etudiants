@@ -9,17 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('users', function (Blueprint $table) {
+            public function up(): void
+            {
+             Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->rememberToken();
+            // 1️⃣ Crée la colonne role_id
+            $table->unsignedBigInteger('role_id');
+            // 2️⃣ Ajoute la clé étrangère après
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+
             $table->timestamps();
         });
+
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
