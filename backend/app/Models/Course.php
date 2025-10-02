@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
 {
-     protected $fillable = ['name', 'description', 'teacher_id'];
-  // Lien vers le professeur
+     protected $fillable = ['name', 'description', 'teacher_id', 'image'];
+    // Lien vers le professeur
     public function teacher()
     {
         return $this->belongsTo(Teacher::class);
@@ -16,7 +16,7 @@ class Course extends Model
     public function students()
     {
         return $this->belongsToMany(Student::class, 'student_course')
-                    ->withPivot('grade')
+                    ->withPivot('grade','enrolled_at','image')
                     ->withTimestamps();
     }
 

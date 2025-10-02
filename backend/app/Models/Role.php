@@ -6,12 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
+    protected $table = 'roles';
+
     protected $fillable = [
         'name',
         'description',
     ];
 
-     // Un rôle a plusieurs utilisateurs
+    // Un rôle a plusieurs utilisateurs
     public function users()
     {
         return $this->hasMany(User::class);

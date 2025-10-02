@@ -16,11 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            // 1️⃣ Crée la colonne role_id
-            $table->unsignedBigInteger('role_id');
-            // 2️⃣ Ajoute la clé étrangère après
+            $table->string('image')->nullable();
+            $table->unsignedBigInteger('role_id')->default(3);
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
-
+            $table->rememberToken();
             $table->timestamps();
         });
 
