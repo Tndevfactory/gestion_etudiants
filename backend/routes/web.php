@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Auth\GoogleController;
@@ -10,16 +11,16 @@ Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallba
 
 // Public Routes
 Route::get('/', function () {
-        return view('home.Accueil');
-    })->name('home');
+    return view('home.Accueil');
+})->name('home');
 
 Route::get('/about', function () {
-        return view('home.About');
-    });
+    return view('home.About');
+});
 
 Route::get('/contact', function () {
-        return view('home.Contact');
-    });
+    return view('home.Contact');
+});
 
 // auth Routes for guests only
 route::middleware(['guest'])->group(function () {
@@ -30,19 +31,27 @@ route::middleware(['guest'])->group(function () {
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 //Admin Routes
 route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin', function () {return view('admin.Dashboard');})
-->name('dashboard');
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/', function () { return view('admin.Dashboard');})->name('dashboard');
+        Route::resource('users', UserController::class);
+
+    });
 });
 //teacher Routes
 route::middleware(['auth', 'role:teacher'])->group(function () {
-    Route::get('/teacher', function () {return view('espace_enseignants.Dashboard');})
+    Route::get('/teacher', function () {
+        return view('espace_enseignants.Dashboard');
+    })
         ->name('dashboard.teacher');
 });
 //students Routes
 route::middleware(['auth', 'role:student'])->group(function () {
-    Route::get('/student', function () {return view('espace_etudiants.Dashboard');})
+    Route::get('/student', function () {
+        return view('espace_etudiants.Dashboard');
+    })
         ->name('dashboard.student');
 
     Route::resource('/students', StudentController::class);
@@ -51,5 +60,5 @@ route::middleware(['auth', 'role:student'])->group(function () {
 });
 // fallback
 Route::fallback(function () {
-     return view('lib.notfound')
-;});
+    return view('lib.notfound');
+});

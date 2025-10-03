@@ -21,13 +21,10 @@
                 Gestion Roles</a>
         </div>
         <div class="mt-2">
-            <a href="" class="hover:underline hover:text-blue-900 "><i class="fa-solid fa-graduation-cap mr-1"></i>
-                Gestion Etudiants</a>
-        </div>
-        <div class="mt-2">
-            <a href="" class="hover:underline hover:text-blue-900 "> <i class="fa-solid fa-person-chalkboard mr-1"></i>
+            <a href="{{route('admin.users.index')}}" class="hover:underline hover:text-blue-900 "><i class="fa-solid fa-users mr-1"></i>
                 Gestion Enseignants</a>
         </div>
+
         <div class="mt-2">
             <a href="" class="hover:underline hover:text-blue-900 "> <i class="fa-brands fa-discourse mr-1"></i> Gestion
                 Cours</a>
