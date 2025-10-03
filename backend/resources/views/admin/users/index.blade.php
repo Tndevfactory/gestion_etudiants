@@ -2,7 +2,6 @@
 
 @section('content')
 
-
         <div x-data="{ openCreate:false, openEdit:false, openDelete:false, selectedUser:null }" class="p-6">
 
             <h1 class="text-2xl font-bold mb-4">Gestion des Enseignants</h1>

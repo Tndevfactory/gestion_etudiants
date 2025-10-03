@@ -37,11 +37,11 @@ class UserController extends Controller
             $imageName = time().'_'.$request->file('image')->getClientOriginalName();
             $request->file('image')->move(public_path('uploads'), $imageName);
             $data['image'] = 'uploads/' . $imageName;
+
         }
 
         $data['password'] = bcrypt($data['password']);
         $data['role_id'] = 2; // role teacher
-
         $user = User::create($data);
 
         // Création du teacher correctement
@@ -53,7 +53,8 @@ class UserController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.users.index');
+        return redirect()->route('admin.users.index')
+            ->with('success', 'Teacher created successfully.');
     }
 
     public function update(Request $request, User $user)
@@ -100,13 +101,13 @@ class UserController extends Controller
             );
         }
 
-        return redirect()->route('admin.users.index');
+        return redirect()->route('admin.users.index') ->with('success', 'Teacher updated successfully.');
     }
 
 
     public function destroy(User $user)
     {
         $user->delete(); // cascade teacher si relation configurée
-        return redirect()->route('admin.users.index');
+        return redirect()->route('admin.users.index') ->with('success', 'Teacher deleted successfully.');
     }
 }
