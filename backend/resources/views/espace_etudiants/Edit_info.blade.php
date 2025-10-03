@@ -4,9 +4,12 @@
     <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
         <h1 class="text-xl font-bold mb-4">Formulaire Informations Etudiants</h1>
 
-        <form action="{{ route('students.update', $student->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('students.update', $student->id) }}" method="POST"
+                      enctype="multipart/form-data"
+            >
             @csrf
             @method('PUT')
+
 
             {{-- Nom --}}
             <div class="mb-4">
@@ -37,7 +40,8 @@
             {{-- Image --}}
             <div class="mb-4">
                 <label class="block font-medium">Image</label>
-                <input type="file" name="image" accept="image/*" onchange="previewImage(event)">
+                <input type="file" name="image" accept="image/*"
+                onchange="previewImage(event)">
                 <div class="mt-2">
                     <img id="preview" src="{{ asset($student->user->image) }}"
                          class="w-32 h-32 rounded border object-cover">

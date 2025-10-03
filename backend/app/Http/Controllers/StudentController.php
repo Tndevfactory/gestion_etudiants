@@ -54,6 +54,7 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // identifier record
         $student = Student::with('user')->findOrFail($id);
 
         $request->validate([
@@ -81,7 +82,8 @@ class StudentController extends Controller
         $student->date_of_birth = $request->date_of_birth;
         $student->save();
 
-        return redirect()->route('students.edit', $student->id)->with('success', 'Infos modifiées avec succès');
+        return redirect()->route('students.edit', $student->id)
+        ->with('success', 'Infos modifiées avec succès');
     }
 
     // Générer PDF
@@ -89,7 +91,9 @@ class StudentController extends Controller
     {
         $student = Student::with('user')->findOrFail($id);
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('espace_etudiants.components.pdf', compact('student'));
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('espace_etudiants.components.pdf',
+         compact('student'));
+
         return $pdf->download('student_' . $student->id . '.pdf');
     }
 
@@ -98,6 +102,7 @@ class StudentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+
+
     }
 }
