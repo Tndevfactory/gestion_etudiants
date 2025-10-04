@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiAuthController;
 use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\ApiUserController;
 
 // Route test simple
 Route::get('/test', function () {
@@ -22,4 +23,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // CRUD complet pour roles
     Route::apiResource('roles', RoleController::class);
+    Route::ApiResource('users', ApiUserController::class);
 });
+
+
+
+
+

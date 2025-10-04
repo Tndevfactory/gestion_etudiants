@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class RoleController extends Controller
 {
     // Middleware Sanctum pour sécuriser l'API
+
 //    public function __construct()
 //    {
 //        $this->middleware('auth:sanctum');
@@ -19,6 +20,8 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::all();
+
+
         return response()->json($roles, 200);
     }
 
