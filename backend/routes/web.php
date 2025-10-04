@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -32,14 +33,27 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// reset password
+
+Route::get('password/forgot', [AuthController::class, 'showForgotForm'])->name('password.request');
+Route::post('password/forgot', [AuthController::class, 'sendResetLink'])->name('password.email');
+
+Route::get('password/reset/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+Route::post('password/reset', [AuthController::class, 'resetPassword'])->name('password.update');
+
 //Admin Routes
 route::middleware(['auth', 'role:admin'])->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
-        Route::get('/', function () { return view('admin.Dashboard');})->name('dashboard');
+        Route::get('/', function () {
+            return view('admin.Dashboard');
+        })->name('dashboard');
         Route::resource('users', UserController::class);
-
+        // data for datatables
+        Route::resource('roles', RoleController::class);
+        Route::get('roles-data', [RoleController::class, 'getData'])->name('roles.data');
     });
 });
+
 //teacher Routes
 route::middleware(['auth', 'role:teacher'])->group(function () {
     Route::get('/teacher', function () {

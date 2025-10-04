@@ -17,7 +17,7 @@
                 <i class="fa-solid fa-chart-line mr-1"></i> Tableau de bord</a>
         </div>
         <div class="mt-2">
-            <a href="" class="hover:underline hover:text-blue-900 "><i class="fa-brands fa-critical-role mr-1"></i>
+            <a href="{{route('admin.roles.index')}}" class="hover:underline hover:text-blue-900 "><i class="fa-brands fa-critical-role mr-1"></i>
                 Gestion Roles</a>
         </div>
         <div class="mt-2">

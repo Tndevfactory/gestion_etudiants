@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Role;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -39,7 +41,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => $request->password,
             'image' => "https://placehold.jp/150x150.png",
-            'role_id' => $role_student->id , // default role student
+            'role_id' => $role_student->id, // default role student
         ]);
 
         Auth::login($user);
@@ -85,4 +87,82 @@ class AuthController extends Controller
         Auth::logout();
         return redirect()->route('login');
     }
+
+    // Form pour demander le reset
+    public function showForgotForm()
+    {
+        return view('auth.passwords.email'); // crée ce fichier Blade
+    }
+
+    // Envoyer le lien de reset
+    public function sendResetLink(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        // Vérifier si l'email existe avant d'appeler Password::sendResetLink
+        $user = \App\Models\User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return back()->withErrors([
+                'email' => 'Cet email n’existe pas dans nos enregistrements.',
+            ]);
+        }
+
+        $status = Password::sendResetLink($request->only('email'));
+
+        return $status === Password::RESET_LINK_SENT
+            ? back()->with(['status' => 'Un lien de réinitialisation a été envoyé à votre adresse e-mail.'])
+            : back()->withErrors(['email' => 'Une erreur est survenue, veuillez réessayer plus tard.']);
+    }
+
+
+    // Form pour reset avec token
+    public function showResetForm(Request $request, $token)
+    {
+        return view('auth.passwords.reset', [
+            'token' => $token,
+            'email' => $request->query('email'), // 👈 récupère l’email dans l’URL
+        ]);
+    }
+
+
+    // Réinitialisation du mot de passe
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:8',
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) use($request) {
+                $user->forceFill([
+                    'password' => $request->password, // PAS de Hash::make ici
+                ])->setRememberToken(Str::random(60));
+
+                $user->save();
+            }
+        );
+
+        switch ($status) {
+            case Password::PASSWORD_RESET:
+                return redirect()->route('login')
+                    ->with('status', 'Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter.');
+
+            case Password::INVALID_USER:
+                return back()->withErrors(['email' => 'Aucun compte ne correspond à cette adresse e-mail.']);
+
+            case Password::INVALID_TOKEN:
+                return back()->withErrors(['email' => 'Le lien de réinitialisation est invalide ou expiré. Veuillez refaire une demande.']);
+
+            case Password::RESET_THROTTLED:
+                return back()->withErrors(['email' => 'Trop de tentatives de réinitialisation. Veuillez patienter quelques minutes avant de réessayer.']);
+
+            default:
+                return back()->withErrors(['email' => 'Une erreur est survenue lors de la réinitialisation. Veuillez réessayer.']);
+        }
+    }
+
 }

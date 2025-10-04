@@ -40,7 +40,7 @@
             <input type="password" name="password"
                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none transition duration-200 bg-white bg-opacity-50">
 
-            <a href="" class=" hover:underline text-blue-600 text-sm">Oubli de mot de passe</a>
+            <a href="{{route('password.request')}}" class=" hover:underline text-blue-600 text-sm">Oubli de mot de passe</a>
         </div>
 
 
